@@ -75,10 +75,15 @@ tomcat
 - :install: install
 - :remove: remove the instance
 
-# Attribute Parameters
+# Attribute parameters
 
+# Example accepting all defaults and not specifying database connection
 
-# Example using ports, jvm, jmx database helpers
+    tomcat "liferay" do
+      path "/usr/local/liferay"
+    end  
+
+# Example using custom ports, jvm options, datasource
 
     tomcat "pentaho" do
       path     "/opt/pentaho"
@@ -86,15 +91,15 @@ tomcat
       user            "pentaho"
       unpack_wars     true
       auto_deploy     true
-      environment     { } 
+      environment     'PENTAHO_HOME' => '/home/pentaho' 
       jvm do
-        xms           "256m"
+        xms           "256m"    
         xmx           "512m"
-        max_perm_size "256m"
-        x_opts        { }
-        xx_opts       { }
-        d_opts        { }
-        additional_opts [    ]
+        max_perm_size "256m"  
+        xx_opts       'CompileThreshold' => '10000', 'ParallelGCThreads' => '',
+              '+UseConcMarkSweepGC' => '',      # -XX:  options
+        d_opts             # -D options
+        additional_opts [    ] # anything that doesn't fit in previous _opts
       end
       datasource do
         driver 'org.gjt.mm.mysql.Driver'
@@ -125,37 +130,9 @@ tomcat
     end
 
 
-
-# An exception will be thrown if one of the values specified by *_port
-# is already in use by another tomcat lwrp
-
-# All *_OPTS attributes are combined into the environment variable JAVA_OPTS.
-# Duplicate options are removed.
-
-# # Example
-
-#     tomcat "pentaho" do
-#       http_port  false
-#       https_port "8443"
-#       version    "7"
-#     end
-
-# To deploy a webapp to the new tomcat, you use a deploy resource or a
-# maven resource (coming soon).
-
-# # Example
-
-#    deploy "pentaho" do  
-#      deploy_root tomcat['pentaho']['webapps']
-#      repository "github.com/bryanwb/pentaho.git"
-#      revision   "1.0.2"
-#      restart_command tomcat['pentaho'] :restart
-#    end
-
-
 TODO
 ====
-
+Lots!!!
 
 License and Author
 ==================
