@@ -32,6 +32,6 @@ ark "tomcat#{version}" do
   url node['tomcat'][version]['url']
   checksum node['tomcat'][version]['checksum']
   version node['tomcat']['version']
-  path "#{node['tomcat']['prefix_dir']}/tomcat"
-  home_dir "#{node['tomcat']['prefix_dir']}/tomcat/default"
+  path "#{node['tomcat']['prefix_root']}/tomcat"
+  home_dir "#{node['tomcat']['prefix_root']}/tomcat/default"
 end  

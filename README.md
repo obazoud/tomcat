@@ -4,52 +4,51 @@ Description
 Installs and configures the Tomcat, Java servlet engine and webserver.
 
 
+
 Requirements
 ============
 
 Platform: 
 
-* CentOS, Red Hat, Fedora (OpenJDK)
+* CentOS, Red Hat, Fedora, Debian, Ubuntu
 
 The following Opscode cookbooks are dependencies:
 
 * java
+* ark
 
 
 Attributes
 ==========
 
-* prefix_dir - /usr/local/, /var/lib/, etc.
+* prefix_root - /usr/local/, /var/lib/, etc.
 
 Recipes
 =======
 
-* default.rb -- installs tomcat via debian package only on a
-debian based distribution. Otherwise installs via tomcat7_binary.rb
-* package.rb -- installs tomcat7 unless node['tomcat']['version'] set
-to 6. The package typically installs a system service.
-* ark.rb installs a vanilla tomcat and creates a service
+* default.rb -- installs a vanilla tomcat from binary package provided
+  by tomcat.apache.org and creates a service
 * base.rb  installs the tomcat from the binary provided by
 tomcat.apache.org, will use version 7 unless node['tomcat']['version'] set
 to 6. No tomcat service is installed.
 
-All of the default webapps such as "ROOT" and "manager" are removed in the tomcat::ark recipe
+All of the default webapps such as "ROOT" and "manager" are removed
 
-ark
----
+default
+-------
 
 This recipe creates a vanilla tomcat installation based on the tarball
 of bytecode available from http://tomcat.apache.org and places it in 
-${prefix_dir}. Additionally, it configures a system v
+${prefix_root}. Additionally, it configures a system v
 init script and creates the symlink
 
-    ${prefix_dir}/tomcat/default -> ${prefix_dir}/tomcat/tomcat{6,7}
+    ${prefix_root}/tomcat/default -> ${prefix_root}/tomcat/tomcat{6,7}
 
 
 base
 ----
 
-It creates an installation of tomcat to prefix_dir. It does very
+It creates an installation of tomcat to prefix_root. It does very
 little besides that.
 
 By default it uses the tomcat 7 by including tomcat7 recipe
@@ -58,11 +57,11 @@ This recipe is intended to be used together with the CATALINA_BASE method to ins
 multiple tomcat instances that use the same set of tomcat installation
 files. This recipe does not add any services. It is intended to be used together with the tomcat lwrp.
 
-    ${prefix_dir}/tomcat/tomcat{6,7}  # CATALINA_HOME
+    ${prefix_root}/tomcat/tomcat{6,7}  # CATALINA_HOME
 
 and creates a symlink to that directory
 
-    ${prefix_dir}/tomcat/default -> ${prefix_dir}/tomcat/tomcat{6,7}
+    ${prefix_root}/tomcat/default -> ${prefix_root}/tomcat/tomcat{6,7}
 
 
 
@@ -75,50 +74,83 @@ tomcat
 
 - :install: install
 - :remove: remove the instance
-- :webapps: returns location of the webapps directory, typically for
-  use with a deploy or maven lwrp (coming soon)
 
 # Attribute Parameters
 
-- http_port: port_num or true/false, default to true and 8080
-- ajp_port:  port_num or true/false, default to true and 8009
-- shutdown_port: port_num or true/false, default to 8005
-- host_name: name for Host element, defaults to localhost
-- unpack_wars: defaults to true
-- auto_deploy: defaults to true
-- jvm_opts: Array of options for the JVM
-- jmx_opts: Array of JMX monitoring options
-- webapp_opts: Array of directives passed to a webapp
-- more_opts: crap that doesn't fit anywhere else
-- env: environment variables to export in init script
-- user: user to run the tomcat as
 
-
-An exception will be thrown if one of the values specified by *_port
-is already in use by another tomcat lwrp
-
-All *_OPTS attributes are combined into the environment variable JAVA_OPTS.
-Duplicate options are removed.
-
-# Example
+# Example using ports, jvm, jmx database helpers
 
     tomcat "pentaho" do
-      http_port  false
-      https_port "8443"
-      version    "7"
+      prefix_root     "/opt/pentaho"
+      version         "7"
+      user            "pentaho"
+      unpack_wars     true
+      auto_deploy     true
+      environment     { }
+      jvm do
+        xms           "256m"
+        xmx           "512m"
+        max_perm_size "256m"
+        x_opts        { }
+        xx_opts       { }
+        d_opts        { }
+        additional_opts [    ]
+      end
+      datasource do
+        driver 'org.gjt.mm.mysql.Driver'
+        database 'name'
+        port 5678
+        username 'user'
+        password 'password'
+        max_active 1
+        max_idle 2
+        max_wait 3  
+      end      
+      ports do
+        http      8080
+        https     8443  # defaults to nil and not used
+        ajp       8009
+        shutdown  8005
+      end
     end
 
-To deploy a webapp to the new tomcat, you use a deploy resource or a
-maven resource (coming soon).
+# Example using custom templates for server.xml and context.xml
 
-# Example
+    tomcat "pentaho" do
+      version "6"
+      user "pentaho"
+      context_template "pentaho_context.xml.erb"
+      server_template  "server.xml.erb"
+      logging_template "logging.properties.erb"
+    end
 
-   deploy "pentaho" do  
-     deploy_root tomcat['pentaho']['webapps']
-     repository "github.com/bryanwb/pentaho.git"
-     revision   "1.0.2"
-     restart_command tomcat['pentaho'] :restart
-   end
+
+
+# An exception will be thrown if one of the values specified by *_port
+# is already in use by another tomcat lwrp
+
+# All *_OPTS attributes are combined into the environment variable JAVA_OPTS.
+# Duplicate options are removed.
+
+# # Example
+
+#     tomcat "pentaho" do
+#       http_port  false
+#       https_port "8443"
+#       version    "7"
+#     end
+
+# To deploy a webapp to the new tomcat, you use a deploy resource or a
+# maven resource (coming soon).
+
+# # Example
+
+#    deploy "pentaho" do  
+#      deploy_root tomcat['pentaho']['webapps']
+#      repository "github.com/bryanwb/pentaho.git"
+#      revision   "1.0.2"
+#      restart_command tomcat['pentaho'] :restart
+#    end
 
 
 TODO

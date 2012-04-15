@@ -20,7 +20,7 @@
 
 default["tomcat"]["version"] = "7"
 version = node["tomcat"]["version"]
-set["tomcat"]["prefix_dir"] = "/usr/local"
+set["tomcat"]["prefix_root"] = "/usr/local"
 prefix_dir = node["tomcat"]["prefix_dir"]
 set["tomcat"]["home"] = "#{prefix_dir}/tomcat/default"
 set["tomcat"]["base"] = "#{prefix_dir}/tomcat/default"
