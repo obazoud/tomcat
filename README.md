@@ -81,12 +81,12 @@ tomcat
 # Example using ports, jvm, jmx database helpers
 
     tomcat "pentaho" do
-      prefix_root     "/opt/pentaho"
+      path     "/opt/pentaho"
       version         "7"
       user            "pentaho"
       unpack_wars     true
       auto_deploy     true
-      environment     { }
+      environment     { } 
       jvm do
         xms           "256m"
         xmx           "512m"
