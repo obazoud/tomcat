@@ -32,7 +32,6 @@ class Chef
       attribute :auto_deploy, :equal_to => [true, false], :default => true
       attribute :environment, :kind_of => Hash, :default => {}
       attribute :user, :kind_of => String, :required => true
-
       
       def initialize(name, run_context=nil)
         super
@@ -50,7 +49,8 @@ class Chef
 
       def jvm(*args, &block)
         @jvm ||= Mash.new
-        @jvm.update(jvm_options_block(*args, &block))
+        @jvm.update(jvm_options_block(*args, &block)) if @jvm.empty?
+        @jvm
       end
 
       def ports(*args, &block)

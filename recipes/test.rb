@@ -1,5 +1,11 @@
 user 'foobarbaz'
 
+
+tomcat 'geo1' do
+  path '/opt/geo1'
+  user 'foobarbaz'
+end
+
 tomcat 'geo' do
   path '/opt/geo'
   user 'foobarbaz'
@@ -9,6 +15,8 @@ tomcat 'geo' do
     max_perm_size '159m'
   end
 end
+
+
 
 # # most basic example
 # tomcat "geo" do

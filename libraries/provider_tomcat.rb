@@ -29,7 +29,7 @@ class Chef
       end
 
       def action_install
-        Chef::Log.debug("jvm options are #{new_resource.jvm}")
+        Chef::Log.debug("jvm options are #{new_resource.jvm} for tomcat resource #{new_resource.name}")
         puts 'foo'
       end
       
