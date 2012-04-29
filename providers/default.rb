@@ -88,7 +88,7 @@ action :install do
       owner resource_h['user']
       action :nothing
     end
-    ckbk_f.run_action(:create)
+    ckbk_f.run_action(:create_if_missing)
   end
   
   t_init = template "/etc/init.d/#{resource_h['name']}" do
