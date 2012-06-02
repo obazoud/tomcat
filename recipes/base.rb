@@ -28,6 +28,14 @@ end
 
 user node['tomcat']['user']
 
+d = directory "#{node['tomcat']['prefix_dir']}/tomcat" do
+  owner "#{node['tomcat']['user']}"
+  group "#{node['tomcat']['user']}"
+  mode 0755
+  action :nothing
+end
+d.run_action(:create)
+
 ark "tomcat#{version}" do
   url node['tomcat'][version]['url']
   checksum node['tomcat'][version]['checksum']
