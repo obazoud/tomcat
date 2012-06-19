@@ -26,7 +26,8 @@ if platform? [ "centos","redhat","fedora"]
   distro = "el"
 end
 
-user node['tomcat']['user']
+u = user node['tomcat']['user']
+u.run_action(:create)
 
 d = directory "#{node['tomcat']['prefix_dir']}/tomcat" do
   owner "#{node['tomcat']['user']}"
