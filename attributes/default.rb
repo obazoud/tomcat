@@ -45,7 +45,7 @@ set["tomcat"]["auto_deploy"] = true
 
 # all the *_opts are later combined into JAVA_OPTS
 set["tomcat"]["jvm_opts"] = ["-Xmx128M", "-Djava.awt.headless=true"]
-set["tomcat"]["jmx_opts"] = []
+set["tomcat"]["jmx_opts"] = ["-Dcom.sun.management.jmxremote", "-Dcom.sun.management.jmxremote.ssl=false", "-Dcom.sun.management.jmxremote.authenticate=false", "Dcom.sun.management.jmxremote.port=8099"]
 set["tomcat"]["webapp_opts"] = []
 set["tomcat"]["more_opts"] = []
 
