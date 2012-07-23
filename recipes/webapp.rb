@@ -14,5 +14,6 @@ t = tomcat node['tomcat']['user'] do
   user node['tomcat']['user']
   action :install
   jvm_opts node['tomcat']['java_opts']
+  jmx_opts node['tomcat']['jmx_opts']
 end
 
