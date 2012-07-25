@@ -32,7 +32,7 @@ attribute :shutdown_port, :kind_of => Integer, :default => 8005
 attribute :host_name, :kind_of => String, :default => "localhost"
 attribute :unpack_wars, :equal_to => [true, false], :default => true
 attribute :auto_deploy, :equal_to => [true, false], :default => true
-attribute :jvm_opts, :kind_of => Array, :default => ["-Djava.awt.headless=true", "-Xmx128M"]
+attribute :jvm_opts, :kind_of => Array, :default => ["-Djava.awt.headless=true", "-Xmx196M"]
 attribute :jmx_opts, :kind_of => Array, :default => []
 attribute :webapp_opts, :kind_of => Array, :default => []
 attribute :more_opts, :kind_of => Array, :default => []
