@@ -10,7 +10,7 @@ JAVA_HOME=<%= node["java"]["java_home"] %>
 CATALINA_HOME=<%= @tomcat["home"] %>
 CATALINA_BASE=<%= @tomcat["base"] %>
 CATALINA_PID="/var/run/<%= @tomcat["pid_file"] %>"
-JAVA_OPTS="<%= @tomcat['jvm_opts'].join(' ') + 
+JAVA_OPTS="<%= @tomcat['jvm_opts'].join(' ') + " " +
  @tomcat['jmx_opts'].join(' ') +  " " +
  @tomcat['webapp_opts'].join(' ') + " " +
  @tomcat['more_opts'].join(' ') %>"
